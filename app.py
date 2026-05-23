@@ -48,14 +48,10 @@ html, body, [class*="css"] {
 #MainMenu, footer, header { visibility: hidden; }
 .stDeployButton { display: none; }
 
-/* Sidebar - fixed */
+/* Sidebar */
 [data-testid="stSidebar"] {
     background: #161b27 !important;
     border-left: 1px solid rgba(255,255,255,0.08);
-    position: fixed !important;
-    height: 100vh !important;
-    top: 0 !important;
-    overflow-y: auto !important;
 }
 [data-testid="stSidebar"] * { color: #e8eaf0 !important; }
 
@@ -320,12 +316,25 @@ def page_dashboard():
             """, unsafe_allow_html=True)
 
     with col_right:
-        st.markdown("<div class='section-title'> توزيع المشاريع</div>", unsafe_allow_html=True)
-        chart_data = {"فيلا": 10, "عمارة": 6, "تجاري": 4, "تخطيط": 3, "أخرى": 1}
-        st.bar_chart(chart_data, color="#4f8ef7")
+        st.markdown("<div class='section-title'>احصائيات سريعة</div>", unsafe_allow_html=True)
 
-        st.markdown("<div class='section-title' style='margin-top:16px;'> بحث سريع</div>", unsafe_allow_html=True)
-        if st.button(" افتح المساعد الذكي ←", use_container_width=True, type="primary"):
+        stats = [
+            ("فيلا سكنية", 10, "#4f8ef7"),
+            ("عمارة سكنية", 6, "#34d399"),
+            ("تجاري", 4, "#fbbf24"),
+            ("تخطيط عمراني", 3, "#a78bfa"),
+            ("أخرى", 1, "#6b7280"),
+        ]
+        for label, val, color in stats:
+            st.markdown(f"""
+            <div style="background:#1c2333;border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:12px 16px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-size:13px;color:#e8eaf0;">{label}</span>
+                <span style="font-size:14px;font-weight:700;color:{color};">{val}</span>
+            </div>
+            """, unsafe_allow_html=True)
+
+        st.markdown("<br>", unsafe_allow_html=True)
+        if st.button("افتح المساعد الذكي", use_container_width=True, type="primary"):
             st.session_state.page = "chat"
             st.rerun()
 
