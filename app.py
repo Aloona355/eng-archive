@@ -400,7 +400,7 @@ def page_chat():
     # Quick suggestions
     st.markdown("<div style='color:#6b7280; font-size:12px; margin-bottom:8px;'>اقتراحات:</div>", unsafe_allow_html=True)
     cols = st.columns(4)
-    suggestions = ["وين فيلا النور؟", "كم مشروع في جدة؟", "المشاريع المكتملة", "تقرير 2023"]
+    suggestions = ["المشاريع قيد التنفيذ", "كم مشروع في جدة؟", "المشاريع المكتملة", "تقرير 2023"]
     for i, sug in enumerate(suggestions):
         with cols[i]:
             if st.button(sug, key=f"sug_{i}", use_container_width=True):
@@ -414,7 +414,7 @@ def page_chat():
         st.markdown("""
         <div class='chat-msg-ai'>
             أهلاً!  أنا مساعدك الذكي لأرشيف المشاريع.<br>
-            اسألني مثلاً: <em style='color:#4f8ef7'>"وين فيلا النور؟"</em> أو <em style='color:#4f8ef7'>"كم مشروع في مكة؟"</em>
+            اسألني مثلاً: <em style='color:#4f8ef7'>"المشاريع المكتملة"</em> أو <em style='color:#4f8ef7'>"كم مشروع في جدة؟"</em>
         </div>
         """, unsafe_allow_html=True)
     else:
@@ -490,7 +490,7 @@ def page_add():
         st.markdown("** بيانات المشروع**")
         col1, col2 = st.columns(2)
         with col1:
-            name = st.text_input("اسم المشروع *", placeholder="مثال: فيلا الزهراني")
+            name = st.text_input("اسم المشروع *", placeholder="اسم المشروع")
             p_type = st.selectbox("نوع المشروع *", ["فيلا سكنية", "عمارة سكنية", "مبنى تجاري", "فندق", "تخطيط عمراني", "تصميم داخلي"])
         with col2:
             stage = st.selectbox("مرحلة المشروع", ["كروكي", "مشروع ابتدائي", "مشروع نهائي", "قيد التنفيذ", "مكتمل"])
@@ -605,18 +605,68 @@ def page_detail():
 # CLIENTS
 # ===========================
 def page_clients():
-    st.markdown("<div class='section-title'> العملاء</div>", unsafe_allow_html=True)
-    for c in CLIENTS:
+    st.markdown("<div class='section-title'>العملاء</div>", unsafe_allow_html=True)
+
+    search_client = st.text_input("بحث باسم العميل", placeholder="اكتب اسم العميل...")
+
+    filtered_clients = CLIENTS
+    if search_client:
+        filtered_clients = [c for c in CLIENTS if search_client in c["name"]]
+
+    for c in filtered_clients:
         col1, col2, col3 = st.columns([0.5, 3, 1])
         with col1:
             st.markdown(f"<div style='width:42px;height:42px;background:linear-gradient(135deg,#4f8ef7,#7fb3ff);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:white;'>{c['name'][0]}</div>", unsafe_allow_html=True)
         with col2:
-            st.markdown(f"<div style='color:#e8eaf0;font-weight:700;'>{c['name']}</div><div style='color:#6b7280;font-size:12px;'> {c['phone']} • {c['projects']} مشاريع</div>", unsafe_allow_html=True)
+            st.markdown(f"<div style='color:#e8eaf0;font-weight:700;'>{c['name']}</div><div style='color:#6b7280;font-size:12px;'>{c['phone']} • {c['projects']} مشاريع</div>", unsafe_allow_html=True)
         with col3:
             if st.button("عرض المشاريع", key=f"client_{c['name']}", use_container_width=True):
-                st.session_state.page = "projects"
+                st.session_state.selected_client = c["name"]
+                st.session_state.page = "client_projects"
                 st.rerun()
         st.markdown("<hr style='border-color:rgba(255,255,255,0.06);'>", unsafe_allow_html=True)
+
+    if search_client and not filtered_clients:
+        st.info("لم يتم العثور على عميل بهذا الاسم")
+
+# ===========================
+# CLIENT PROJECTS
+# ===========================
+def page_client_projects():
+    client_name = st.session_state.get("selected_client", "")
+    st.markdown(f"<div class='section-title'>مشاريع {client_name}</div>", unsafe_allow_html=True)
+
+    if st.button("رجوع للعملاء", use_container_width=False):
+        st.session_state.page = "clients"
+        st.rerun()
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    client_projects = [p for p in PROJECTS if p["owner"] == client_name]
+
+    if not client_projects:
+        st.info("لا توجد مشاريع لهذا العميل في الأرشيف")
+        return
+
+    cols = st.columns(3)
+    for i, p in enumerate(client_projects):
+        with cols[i % 3]:
+            stage_class = "stage-done" if p["stage"] == "مكتمل" else "stage-ongoing" if p["stage"] == "مشروع نهائي" else "stage-early"
+            st.markdown(f"""
+            <div class='project-card'>
+                <div style='font-size:11px; color:#4f8ef7; margin-bottom:8px;'>{p["type"]}</div>
+                <div style='font-size:15px; font-weight:700; color:#e8eaf0;'>{p["name"]}</div>
+                <div style='font-size:12px; color:#6b7280; margin:6px 0 10px;'>{p["city"]} • {p["year"]}</div>
+                <div style='background:rgba(255,255,255,0.06); border-radius:4px; height:4px; margin-bottom:8px;'>
+                    <div style='background:#4f8ef7; height:4px; border-radius:4px; width:{p["progress"]}%;'></div>
+                </div>
+                <span class='stage-badge {stage_class}'>{p["stage"]}</span>
+            </div>
+            """, unsafe_allow_html=True)
+            if st.button("فتح المشروع", key=f"cp_{p['id']}", use_container_width=True):
+                st.session_state.selected_project = p
+                st.session_state.page = "detail"
+                st.rerun()
 
 # ===========================
 # REPORTS
@@ -651,13 +701,14 @@ else:
     page = st.session_state.page
 
     page_map = {
-        "dashboard": (page_dashboard, " لوحة التحكم"),
-        "projects":  (page_projects,  " كل المشاريع"),
-        "chat":      (page_chat,      " المساعد الذكي"),
-        "add":       (page_add,       " مشروع جديد"),
-        "detail":    (page_detail,    " تفاصيل المشروع"),
-        "clients":   (page_clients,   " العملاء"),
-        "reports":   (page_reports,   " التقارير"),
+        "dashboard":       (page_dashboard,       "لوحة التحكم"),
+        "projects":        (page_projects,         "كل المشاريع"),
+        "chat":            (page_chat,             "المساعد الذكي"),
+        "add":             (page_add,              "مشروع جديد"),
+        "detail":          (page_detail,           "تفاصيل المشروع"),
+        "clients":         (page_clients,          "العملاء"),
+        "client_projects": (page_client_projects,  "مشاريع العميل"),
+        "reports":         (page_reports,          "التقارير"),
     }
 
     func, title = page_map.get(page, (page_dashboard, " لوحة التحكم"))
