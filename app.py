@@ -184,6 +184,19 @@ div[data-testid="stForm"] {
     padding: 20px;
 }
 
+/* Hide Press Enter text */
+.stTextInput > div > div > div > div[data-baseweb="input"] + div { display: none !important; }
+small, [data-testid="InputInstructions"] { display: none !important; }
+.st-emotion-cache-ue6h4q { display: none !important; }
+div[data-testid="stTextInput"] small { display: none !important; }
+div[data-testid="stSelectbox"] small { display: none !important; }
+[data-testid="InputInstructions"] { display: none !important; }
+p[id*="instruction"] { display: none !important; }
+
+/* Hide all helper text under inputs */
+.stTextInput div[data-baseweb="base-input"] ~ div { display: none !important; }
+footer[data-testid="InputInstructions"] { display: none !important; }
+
 /* Tabs */
 .stTabs [data-baseweb="tab-list"] {
     background: #161b27;
@@ -429,7 +442,7 @@ def page_chat():
     with st.form("chat_form", clear_on_submit=True):
         col1, col2 = st.columns([5, 1])
         with col1:
-            user_input = st.text_input("", placeholder="اكتب سؤالك", label_visibility="collapsed")
+            user_input = st.text_input("", placeholder="اكتب سؤالك... مثال: وين مشروع الغامدي؟", label_visibility="collapsed")
         with col2:
             send = st.form_submit_button("إرسال ↑", use_container_width=True, type="primary")
 
@@ -441,6 +454,9 @@ def page_chat():
             st.session_state.chat_history.append({"role": "ai", "text": response})
             st.rerun()
 
+    if st.button(" مسح المحادثة", key="clear_chat"):
+        st.session_state.chat_history = []
+        st.rerun()
 
 def get_ai_response(text):
     text_lower = text.lower()
@@ -488,10 +504,10 @@ def page_add():
         col1, col2 = st.columns(2)
         with col1:
             name = st.text_input("اسم المشروع *", placeholder="اسم المشروع")
-            p_type = st.selectbox("نوع المشروع *", ["فيلا سكنية", "عمارة سكنية", "مبنى تجاري", "فندق", "تخطيط عمراني", "تصميم داخلي"])
+            p_type = st.selectbox("نوع المشروع *", ["اختر النوع", "فيلا سكنية", "عمارة سكنية", "مبنى تجاري", "فندق", "تخطيط عمراني", "تصميم داخلي"])
         with col2:
-            stage = st.selectbox("مرحلة المشروع", ["كروكي", "مشروع ابتدائي", "مشروع نهائي", "قيد التنفيذ", "مكتمل"])
-            city = st.selectbox("المدينة", ["مكة المكرمة", "جدة", "الرياض", "المدينة المنورة"])
+            stage = st.selectbox("مرحلة المشروع", ["اختر المرحلة", "كروكي", "مشروع ابتدائي", "مشروع نهائي", "قيد التنفيذ", "مكتمل"])
+            city = st.selectbox("المدينة", ["اختر المدينة", "مكة المكرمة", "جدة", "الرياض", "المدينة المنورة"])
 
         st.markdown("** بيانات العميل**")
         col3, col4 = st.columns(2)
@@ -613,9 +629,10 @@ def page_clients():
     for c in filtered_clients:
         col1, col2, col3 = st.columns([0.5, 3, 1])
         with col1:
-            st.markdown(f"<div style='width:42px;height:42px;background:linear-gradient(135deg,#4f8ef7,#7fb3ff);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:white;'>{c['name'][0]}</div>", unsafe_allow_html=True)
+            first_letter = c['name'][0] if c['name'] else "؟"
+            st.markdown(f"<div style='width:42px;height:42px;background:linear-gradient(135deg,#4f8ef7,#7fb3ff);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:white;font-family:Cairo,sans-serif;'>{first_letter}</div>", unsafe_allow_html=True)
         with col2:
-            st.markdown(f"<div style='color:#e8eaf0;font-weight:700;'>{c['name']}</div><div style='color:#6b7280;font-size:12px;'>{c['phone']} • {c['projects']} مشاريع</div>", unsafe_allow_html=True)
+            st.markdown(f"<div style='color:#e8eaf0;font-weight:700;font-family:Cairo,sans-serif;'>{c['name']}</div><div style='color:#6b7280;font-size:12px;font-family:Cairo,sans-serif;'>{c['phone']} • {c['projects']} مشاريع</div>", unsafe_allow_html=True)
         with col3:
             if st.button("عرض المشاريع", key=f"client_{c['name']}", use_container_width=True):
                 st.session_state.selected_client = c["name"]
