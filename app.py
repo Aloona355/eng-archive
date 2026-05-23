@@ -48,12 +48,22 @@ html, body, [class*="css"] {
 #MainMenu, footer, header { visibility: hidden; }
 .stDeployButton { display: none; }
 
-/* Sidebar */
+/* Sidebar - fixed */
 [data-testid="stSidebar"] {
     background: #161b27 !important;
     border-left: 1px solid rgba(255,255,255,0.08);
+    position: fixed !important;
+    height: 100vh !important;
+    top: 0 !important;
+    overflow-y: auto !important;
 }
 [data-testid="stSidebar"] * { color: #e8eaf0 !important; }
+
+/* Hide sidebar collapse/arrow buttons */
+[data-testid="collapsedControl"] { display: none !important; }
+[data-testid="stSidebarCollapseButton"] { display: none !important; }
+button[data-testid="baseButton-header"] { display: none !important; }
+.st-emotion-cache-1dp5vir { display: none !important; }
 
 /* Cards */
 .metric-card {
@@ -262,22 +272,10 @@ def render_sidebar():
                 st.rerun()
 
         st.markdown("---")
-        st.markdown("**المشاريع الأخيرة**")
-        recent = [" فيلا النور", " أبراج السلام", " فندق الراحة"]
-        for r in recent:
-            if st.button(r, key=f"recent_{r}", use_container_width=True):
-                st.session_state.page = "detail"
-                st.rerun()
-
-        st.markdown("---")
-        col1, col2 = st.columns([2, 1])
-        with col1:
-            st.markdown("<div style='font-size:13px; color:#e8eaf0;'>م. أحمد الزهراني<br><span style='font-size:11px; color:#6b7280;'>مهندس مشاريع</span></div>", unsafe_allow_html=True)
-        with col2:
-            if st.button("", key="logout"):
-                st.session_state.logged_in = False
-                st.session_state.chat_history = []
-                st.rerun()
+        if st.button("تسجيل الخروج", key="logout", use_container_width=True):
+            st.session_state.logged_in = False
+            st.session_state.chat_history = []
+            st.rerun()
 
 # ===========================
 # DASHBOARD
