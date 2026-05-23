@@ -239,8 +239,8 @@ def login_page():
         """, unsafe_allow_html=True)
 
         with st.form("login_form"):
-            email = st.text_input(" البريد الإلكتروني", placeholder="engineer@company.com")
-            password = st.text_input(" كلمة المرور", type="password", placeholder="••••••••")
+            email = st.text_input(" البريد الإلكتروني")
+            password = st.text_input(" كلمة المرور", type="password")
             submitted = st.form_submit_button("تسجيل الدخول", use_container_width=True, type="primary")
 
             if submitted:
