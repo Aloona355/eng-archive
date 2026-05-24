@@ -295,134 +295,146 @@ def login_page():
 # SIDEBAR
 # ===========================
 def render_sidebar():
-    # Inject drawer CSS + overlay
-    is_open = st.session_state.sidebar_open
-    drawer_style = "transform: translateX(0);" if is_open else "transform: translateX(100%);"
-    overlay_display = "block" if is_open else "none"
-
+    is_open = st.session_state.get("sidebar_open", False)
+    
     st.markdown(f"""
     <style>
-    /* Hide default streamlit sidebar */
+    /* Hide streamlit default sidebar completely */
     [data-testid="stSidebar"] {{ display: none !important; }}
     [data-testid="collapsedControl"] {{ display: none !important; }}
-    .block-container {{ padding-top: 60px !important; }}
 
-    /* Overlay */
-    .drawer-overlay {{
-        display: {overlay_display};
+    /* Hamburger button - fixed top left corner */
+    .ham-btn {{
         position: fixed;
-        inset: 0;
-        background: rgba(0,0,0,0.5);
-        z-index: 998;
-    }}
-
-    /* Drawer */
-    .drawer {{
-        position: fixed;
-        top: 0;
-        right: 0;
-        width: 260px;
-        height: 100vh;
-        background: #161b27;
-        border-left: 1px solid rgba(255,255,255,0.08);
-        z-index: 999;
-        padding: 24px 16px;
-        overflow-y: auto;
-        transition: transform 0.3s ease;
-        {drawer_style}
-    }}
-
-    .drawer-title {{
-        font-size: 14px;
-        font-weight: 700;
-        color: #e8eaf0;
-        margin-bottom: 20px;
-        padding-bottom: 14px;
-        border-bottom: 1px solid rgba(255,255,255,0.08);
-        font-family: Cairo, sans-serif;
-    }}
-
-    .drawer-nav-item {{
-        display: block;
-        width: 100%;
-        padding: 11px 14px;
-        margin-bottom: 6px;
-        background: transparent;
-        border: none;
-        border-radius: 8px;
-        color: #9ca3af;
-        font-family: Cairo, sans-serif;
-        font-size: 14px;
-        font-weight: 600;
-        text-align: right;
-        cursor: pointer;
-        transition: all 0.2s;
-    }}
-    .drawer-nav-item:hover {{
-        background: rgba(79,142,247,0.08);
-        color: #e8eaf0;
-    }}
-
-    /* Hamburger button fixed top-right */
-    .hamburger-fixed {{
-        position: fixed;
-        top: 14px;
-        right: 16px;
-        z-index: 1000;
+        top: 16px;
+        left: 16px;
+        z-index: 1001;
+        width: 40px;
+        height: 40px;
         background: #161b27;
         border: 1px solid rgba(255,255,255,0.1);
         border-radius: 8px;
-        padding: 8px 10px;
-        cursor: pointer;
         display: flex;
         flex-direction: column;
-        gap: 4px;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        cursor: pointer;
     }}
-    .hamburger-fixed span {{
+    .ham-btn span {{
         display: block;
-        width: 20px;
+        width: 18px;
         height: 2px;
         background: #e8eaf0;
         border-radius: 2px;
     }}
+
+    /* Dark overlay */
+    .drawer-overlay {{
+        display: {"block" if is_open else "none"};
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.55);
+        z-index: 1002;
+        cursor: pointer;
+    }}
+
+    /* Drawer panel */
+    .drawer-panel {{
+        position: fixed;
+        top: 0;
+        right: {"0" if is_open else "-280px"};
+        width: 260px;
+        height: 100vh;
+        background: #161b27;
+        border-left: 1px solid rgba(255,255,255,0.08);
+        z-index: 1003;
+        padding: 24px 16px;
+        transition: right 0.3s ease;
+        overflow-y: auto;
+        direction: rtl;
+    }}
+
+    .drawer-header {{
+        font-size: 14px;
+        font-weight: 700;
+        color: #e8eaf0;
+        font-family: Cairo, sans-serif;
+        padding-bottom: 16px;
+        margin-bottom: 16px;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+    }}
+
+    .drawer-link {{
+        display: block;
+        padding: 11px 12px;
+        margin-bottom: 4px;
+        color: #9ca3af;
+        font-family: Cairo, sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-align: right;
+    }}
+    .drawer-link:hover {{
+        background: rgba(79,142,247,0.08);
+        color: #e8eaf0;
+    }}
     </style>
 
-    <div class="drawer-overlay" onclick="window.location.reload()"></div>
+    <!-- Hamburger button (always visible) -->
+    <div class="ham-btn" onclick="document.getElementById('open-sidebar').click()">
+        <span></span><span></span><span></span>
+    </div>
 
-    <div class="drawer">
-        <div class="drawer-title">نظام الأرشفة الهندسية</div>
+    <!-- Overlay to close -->
+    <div class="drawer-overlay" onclick="document.getElementById('close-sidebar').click()"></div>
+
+    <!-- Drawer panel -->
+    <div class="drawer-panel">
+        <div class="drawer-header">نظام الأرشفة الهندسية</div>
     </div>
     """, unsafe_allow_html=True)
 
-    # Hamburger button
-    col1, col2 = st.columns([8, 1])
+    # Hidden Streamlit buttons for open/close logic
+    col1, col2, col3 = st.columns([1,1,8])
+    with col1:
+        if st.button("☰", key="open-sidebar", help=""):
+            st.session_state.sidebar_open = True
+            st.rerun()
     with col2:
-        if st.button("☰", key="toggle_sidebar"):
-            st.session_state.sidebar_open = not st.session_state.sidebar_open
+        if st.button("✕", key="close-sidebar", help=""):
+            st.session_state.sidebar_open = False
             st.rerun()
 
-    # Show nav items inside expander when open
+    # Actual nav items shown inside drawer when open
     if is_open:
-        with st.expander("", expanded=True):
-            st.markdown("<div style='font-weight:700; color:#e8eaf0; margin-bottom:10px; font-size:14px;'>القائمة الرئيسية</div>", unsafe_allow_html=True)
+        pages = {
+            "الرئيسية": "dashboard",
+            "كل المشاريع": "projects",
+            "شات AI": "chat",
+            "مشروع جديد": "add",
+            "العملاء": "clients",
+            "التقارير": "reports",
+        }
+        
+        # Show nav as fixed overlay buttons
+        nav_html = '<div style="position:fixed;top:90px;right:16px;z-index:1004;width:228px;direction:rtl;">'
+        for label in pages.keys():
+            nav_html += f'<div class="drawer-link">{label}</div>'
+        nav_html += '</div>'
+        st.markdown(nav_html, unsafe_allow_html=True)
 
-            pages = {
-                "الرئيسية": "dashboard",
-                "كل المشاريع": "projects",
-                "شات AI": "chat",
-                "مشروع جديد": "add",
-                "العملاء": "clients",
-                "التقارير": "reports",
-            }
-
+        # Actual clickable buttons (hidden but functional)
+        with st.container():
             for label, key in pages.items():
-                if st.button(label, key=f"nav_{key}", use_container_width=True):
+                if st.button(label, key=f"nav_{key}"):
                     st.session_state.page = key
                     st.session_state.sidebar_open = False
                     st.rerun()
-
-            st.markdown("---")
-            if st.button("تسجيل الخروج", key="logout", use_container_width=True):
+            if st.button("تسجيل الخروج", key="logout"):
                 st.session_state.logged_in = False
                 st.session_state.chat_history = []
                 st.session_state.sidebar_open = False
