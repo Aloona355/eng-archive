@@ -261,35 +261,23 @@ def login_page():
         </div>
         """, unsafe_allow_html=True)
 
-        # White input CSS for login - aggressive override
+        # Make inputs white background with dark text - guaranteed visible
         st.markdown("""
         <style>
-        /* Target all inputs globally */
-        input, input:focus, input:active, input:hover {
-            color: #ffffff !important;
-            -webkit-text-fill-color: #ffffff !important;
-            caret-color: #ffffff !important;
+        [data-baseweb="base-input"] {
+            background-color: #ffffff !important;
+            border-radius: 8px !important;
         }
-        input[type="email"],
-        input[type="password"],
-        input[type="text"] {
-            color: #ffffff !important;
-            -webkit-text-fill-color: #ffffff !important;
-            caret-color: #ffffff !important;
-        }
-        /* placeholder */
-        input::placeholder,
-        input[type="email"]::placeholder,
-        input[type="password"]::placeholder {
-            color: rgba(255,255,255,0.4) !important;
-            -webkit-text-fill-color: rgba(255,255,255,0.4) !important;
-            opacity: 1 !important;
-        }
-        /* BaseUI input override */
-        [data-baseweb="input"] input,
         [data-baseweb="base-input"] input {
-            color: #ffffff !important;
-            -webkit-text-fill-color: #ffffff !important;
+            background-color: #ffffff !important;
+            color: #111111 !important;
+            -webkit-text-fill-color: #111111 !important;
+            caret-color: #111111 !important;
+            font-weight: 500 !important;
+        }
+        [data-baseweb="base-input"] input::placeholder {
+            color: #999999 !important;
+            -webkit-text-fill-color: #999999 !important;
         }
         </style>
         """, unsafe_allow_html=True)
