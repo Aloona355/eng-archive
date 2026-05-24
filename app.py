@@ -250,51 +250,93 @@ if "sidebar_open" not in st.session_state:
 # LOGIN PAGE
 # ===========================
 def login_page():
+    # Initialize login fields in session state
+    if "login_email" not in st.session_state:
+        st.session_state.login_email = ""
+    if "login_pass" not in st.session_state:
+        st.session_state.login_pass = ""
+
     col1, col2, col3 = st.columns([1, 1.2, 1])
     with col2:
         st.markdown("<br><br>", unsafe_allow_html=True)
         st.markdown("""
         <div style='text-align:center; margin-bottom:30px;'>
-            <div style='font-size:52px; margin-bottom:12px;'></div>
-            <div style='font-size:22px; font-weight:800; color:#e8eaf0;'>نظام الأرشفة الهندسية</div>
-            <div style='font-size:13px; color:#6b7280; margin-top:6px;'>Engineering Archive System</div>
+            <div style='font-size:22px; font-weight:800; color:#e8eaf0; font-family:Cairo,sans-serif;'>نظام الأرشفة الهندسية</div>
+            <div style='font-size:13px; color:#6b7280; margin-top:6px; font-family:Cairo,sans-serif;'>Engineering Archive System</div>
+        </div>
+        <div style='background:#1c2333; border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:28px;'>
+            <div style='font-size:13px; color:#9ca3af; margin-bottom:6px; font-family:Cairo,sans-serif; text-align:right;'>البريد الإلكتروني</div>
         </div>
         """, unsafe_allow_html=True)
 
-        # Make inputs white background with dark text - guaranteed visible
+        # Email field
+        email = st.text_input(
+            "email",
+            placeholder="engineer@company.com",
+            label_visibility="collapsed",
+            key="email_field"
+        )
+
+        st.markdown("""
+        <div style='margin-top:12px; font-size:13px; color:#9ca3af; font-family:Cairo,sans-serif; text-align:right;'>كلمة المرور</div>
+        """, unsafe_allow_html=True)
+
+        # Password field
+        password = st.text_input(
+            "password",
+            placeholder="••••••••",
+            type="password",
+            label_visibility="collapsed",
+            key="pass_field"
+        )
+
+        st.markdown("<br>", unsafe_allow_html=True)
+
+        # Login button
+        if st.button("تسجيل الدخول", use_container_width=True, type="primary"):
+            if (email in ["admin@eng.com", "admin"]) and password == "1234":
+                st.session_state.logged_in = True
+                st.rerun()
+            else:
+                st.error("بيانات خاطئة — جرب: admin@eng.com / 1234")
+
+        st.markdown("""
+        <div style='text-align:center; color:#6b7280; font-size:12px; margin-top:14px; font-family:Cairo,sans-serif;'>
+            تجربة: admin@eng.com / 1234
+        </div>
+        """, unsafe_allow_html=True)
+
+        # CSS - target the specific input fields
         st.markdown("""
         <style>
-        [data-baseweb="base-input"] {
-            background-color: #ffffff !important;
+        div[data-testid="stTextInput"] input {
+            background: #0f1117 !important;
+            border: 1px solid rgba(255,255,255,0.15) !important;
             border-radius: 8px !important;
+            padding: 12px 14px !important;
+            font-size: 14px !important;
+            font-family: Cairo, sans-serif !important;
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
         }
-        [data-baseweb="base-input"] input {
-            background-color: #ffffff !important;
-            color: #111111 !important;
-            -webkit-text-fill-color: #111111 !important;
-            caret-color: #111111 !important;
-            font-weight: 500 !important;
+        div[data-testid="stTextInput"] input:focus {
+            border-color: #4f8ef7 !important;
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
         }
-        [data-baseweb="base-input"] input::placeholder {
-            color: #999999 !important;
-            -webkit-text-fill-color: #999999 !important;
+        div[data-testid="stTextInput"] input::placeholder {
+            color: rgba(255,255,255,0.3) !important;
+        }
+        /* Force white on autofill */
+        div[data-testid="stTextInput"] input:-webkit-autofill,
+        div[data-testid="stTextInput"] input:-webkit-autofill:hover,
+        div[data-testid="stTextInput"] input:-webkit-autofill:focus {
+            -webkit-text-fill-color: #ffffff !important;
+            -webkit-box-shadow: 0 0 0px 1000px #0f1117 inset !important;
+            transition: background-color 5000s ease-in-out 0s;
         }
         </style>
         """, unsafe_allow_html=True)
-
-        with st.form("login_form"):
-            email = st.text_input("البريد الإلكتروني", placeholder="engineer@company.com")
-            password = st.text_input("كلمة المرور", type="password", placeholder="••••••••")
-            submitted = st.form_submit_button("تسجيل الدخول", use_container_width=True, type="primary")
-
-            if submitted:
-                if (email in ["admin@eng.com", "admin"]) and password == "1234":
-                    st.session_state.logged_in = True
-                    st.rerun()
-                else:
-                    st.error("بيانات خاطئة — جرب: admin@eng.com / 1234")
-
-        st.markdown("<div style='text-align:center; color:#6b7280; font-size:12px; margin-top:10px;'>تجربة: admin@eng.com / 1234</div>", unsafe_allow_html=True)
 
 # ===========================
 # SIDEBAR
