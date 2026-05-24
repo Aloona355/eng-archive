@@ -53,7 +53,7 @@ html, body, [class*="css"] {
     color: #ffffff !important;
 }
 
-/* كل النصوص بالموقع */
+/* كل النصوص */
 h1, h2, h3, h4, h5, h6,
 p, span, div, label,
 [data-testid="stMarkdownContainer"],
@@ -65,8 +65,10 @@ small {
     color: #ffffff !important;
 }
 
-/* اخفاء عناصر ستريمليت */
-#MainMenu, footer, header {
+/* اخفاء عناصر Streamlit */
+#MainMenu,
+footer,
+header {
     visibility: hidden;
 }
 
@@ -98,26 +100,41 @@ small {
     border-color: rgba(79,142,247,0.5) !important;
 }
 
-/* الحقول */
+/* الأزرار العامة */
+.stButton > button {
+    font-family: 'Cairo', sans-serif !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    color: #ffffff !important;
+}
+
+/* حقول الإدخال */
 .stTextInput > div > div > input,
-.stSelectbox > div > div,
-.stTextArea > div > div > textarea {
+.stTextArea > div > div > textarea,
+.stSelectbox > div > div {
     background: #1c2333 !important;
     border: 1px solid rgba(255,255,255,0.15) !important;
     color: #ffffff !important;
     direction: rtl !important;
 }
 
-/* placeholder داخل المربعات */
+/* النص داخل الحقول */
+input,
+textarea {
+    color: #ffffff !important;
+    caret-color: #ffffff !important;
+}
+
+/* Placeholder */
 input::placeholder,
 textarea::placeholder {
     color: rgba(255,255,255,0.45) !important;
 }
 
-/* selectbox */
+/* Selectbox */
 .stSelectbox div[data-baseweb="select"] * {
-    color: #ffffff !important;
     background: #1c2333 !important;
+    color: #ffffff !important;
 }
 
 /* الفورمز */
@@ -126,14 +143,6 @@ div[data-testid="stForm"] {
     border: 1px solid rgba(255,255,255,0.08);
     border-radius: 12px;
     padding: 20px;
-}
-
-/* الأزرار العامة */
-.stButton > button {
-    font-family: 'Cairo', sans-serif !important;
-    border-radius: 8px !important;
-    font-weight: 600 !important;
-    color: white !important;
 }
 
 /* التابات */
@@ -152,17 +161,38 @@ div[data-testid="stForm"] {
     background: #1c2333 !important;
     border-radius: 8px !important;
 }
+
+/* إخفاء النصوص المساعدة تحت الحقول */
+[data-testid="InputInstructions"] {
+    display: none !important;
+}
+
+small {
+    display: none !important;
+}
+
+p[id*="instruction"] {
+    display: none !important;
+}
+
+.stTextInput div[data-baseweb="base-input"] ~ div {
+    display: none !important;
+}
+
+.stTextArea div[data-baseweb="base-input"] ~ div {
+    display: none !important;
+}
+
+/* إخفاء زر فتح/إغلاق السايدبار */
+[data-testid="collapsedControl"] {
+    display: none !important;
+}
+
+[data-testid="stSidebarCollapseButton"] {
+    display: none !important;
+}
 </style>
 """, unsafe_allow_html=True)
-# ===== SESSION STATE =====
-if "logged_in" not in st.session_state:
-    st.session_state.logged_in = False
-if "chat_history" not in st.session_state:
-    st.session_state.chat_history = []
-if "page" not in st.session_state:
-    st.session_state.page = "dashboard"
-if "sidebar_open" not in st.session_state:
-    st.session_state.sidebar_open = True
 
 # ===========================
 # LOGIN PAGE
