@@ -549,7 +549,7 @@ def page_chat():
     with st.form("chat_form", clear_on_submit=True):
         col1, col2 = st.columns([5, 1])
         with col1:
-            user_input = st.text_input("", placeholder="اكتب سؤالك... مثال: وين مشروع الغامدي؟", label_visibility="collapsed")
+            user_input = st.text_input("", placeholder="اكتب سؤالك", label_visibility="collapsed")
         with col2:
             send = st.form_submit_button("إرسال ↑", use_container_width=True, type="primary")
 
