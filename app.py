@@ -261,18 +261,35 @@ def login_page():
         </div>
         """, unsafe_allow_html=True)
 
-        # White input CSS for login
+        # White input CSS for login - aggressive override
         st.markdown("""
         <style>
-        div[data-testid="stForm"] input {
+        /* Target all inputs globally */
+        input, input:focus, input:active, input:hover {
             color: #ffffff !important;
             -webkit-text-fill-color: #ffffff !important;
             caret-color: #ffffff !important;
-            background: #1c2333 !important;
         }
-        div[data-testid="stForm"] input::placeholder {
-            color: rgba(255,255,255,0.35) !important;
-            -webkit-text-fill-color: rgba(255,255,255,0.35) !important;
+        input[type="email"],
+        input[type="password"],
+        input[type="text"] {
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
+            caret-color: #ffffff !important;
+        }
+        /* placeholder */
+        input::placeholder,
+        input[type="email"]::placeholder,
+        input[type="password"]::placeholder {
+            color: rgba(255,255,255,0.4) !important;
+            -webkit-text-fill-color: rgba(255,255,255,0.4) !important;
+            opacity: 1 !important;
+        }
+        /* BaseUI input override */
+        [data-baseweb="input"] input,
+        [data-baseweb="base-input"] input {
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
         }
         </style>
         """, unsafe_allow_html=True)
