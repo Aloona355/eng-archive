@@ -194,6 +194,25 @@ p[id*="instruction"] {
 </style>
 """, unsafe_allow_html=True)
 
+# ===== SESSION STATE =====
+if "logged_in" not in st.session_state:
+    st.session_state["logged_in"] = False
+
+if "chat_history" not in st.session_state:
+    st.session_state["chat_history"] = []
+
+if "page" not in st.session_state:
+    st.session_state["page"] = "dashboard"
+
+if "sidebar_open" not in st.session_state:
+    st.session_state["sidebar_open"] = True
+
+if "selected_project" not in st.session_state:
+    st.session_state["selected_project"] = PROJECTS[0]
+
+if "selected_client" not in st.session_state:
+    st.session_state["selected_client"] = ""
+    
 # ===========================
 # LOGIN PAGE
 # ===========================
@@ -804,22 +823,23 @@ def page_reports():
 # ===========================
 # MAIN ROUTER
 # ===========================
-if not st.session_state.logged_in:
+if not st.session_state.get("logged_in", False):
     login_page()
 else:
     render_sidebar()
-    page = st.session_state.page
+
+    page = st.session_state.get("page", "dashboard")
 
     page_map = {
-        "dashboard":       (page_dashboard,       "لوحة التحكم"),
-        "projects":        (page_projects,         "كل المشاريع"),
-        "chat":            (page_chat,             "المساعد الذكي"),
-        "add":             (page_add,              "مشروع جديد"),
-        "detail":          (page_detail,           "تفاصيل المشروع"),
-        "clients":         (page_clients,          "العملاء"),
-        "client_projects": (page_client_projects,  "مشاريع العميل"),
-        "reports":         (page_reports,          "التقارير"),
+        "dashboard": page_dashboard,
+        "projects": page_projects,
+        "chat": page_chat,
+        "add": page_add,
+        "detail": page_detail,
+        "clients": page_clients,
+        "client_projects": page_client_projects,
+        "reports": page_reports,
     }
 
-    func, title = page_map.get(page, (page_dashboard, " لوحة التحكم"))
+    func = page_map.get(page, page_dashboard)
     func()
