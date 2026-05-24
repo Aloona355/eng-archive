@@ -290,7 +290,7 @@ def login_page():
         margin-bottom: 6px;
         text-align: right;
     }
-    /* Input styling */
+    /* Input styling - login only */
     .stTextInput > div > div > input {
         background: #0d1117 !important;
         border: 1px solid rgba(255,255,255,0.12) !important;
@@ -300,8 +300,6 @@ def login_page():
         caret-color: #ffffff !important;
         font-family: Cairo, sans-serif !important;
         font-size: 14px !important;
-        direction: ltr !important;
-        text-align: left !important;
     }
     .stTextInput > div > div > input::placeholder {
         color: rgba(255,255,255,0.25) !important;
@@ -312,6 +310,13 @@ def login_page():
         -webkit-text-fill-color: #ffffff !important;
     }
     .stTextInput label { display: none !important; }
+    /* Force sidebar dark - override any login CSS leak */
+    [data-testid="stSidebar"],
+    [data-testid="stSidebar"] > div,
+    section[data-testid="stSidebar"] {
+        background-color: #161b27 !important;
+        background: #161b27 !important;
+    }
     </style>
     """, unsafe_allow_html=True)
 
@@ -343,8 +348,12 @@ def login_page():
 def render_sidebar():
     st.markdown("""
     <style>
-    [data-testid="stSidebar"] {
+    [data-testid="stSidebar"],
+    [data-testid="stSidebar"] > div,
+    section[data-testid="stSidebar"],
+    .css-1d391kg, .css-ffhzg2 {
         background: #161b27 !important;
+        background-color: #161b27 !important;
         border-left: 1px solid rgba(255,255,255,0.08) !important;
         min-width: 220px !important;
         max-width: 220px !important;
