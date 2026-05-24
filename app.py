@@ -34,110 +34,170 @@ st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap');
 
-* {
-    font-family: 'Cairo', sans-serif !important;
-}
+* { font-family: 'Cairo', sans-serif !important; }
 
 html, body, [class*="css"] {
     font-family: 'Cairo', sans-serif !important;
     direction: rtl;
-    color: #ffffff !important;
 }
 
-.main {
-    background: #0f1117;
-}
+.main { background: #0f1117; }
+.stApp { background: #0f1117; }
 
-.stApp {
-    background: #0f1117;
-    color: #ffffff !important;
-}
+/* Hide streamlit elements */
+#MainMenu, footer, header { visibility: hidden; }
+.stDeployButton { display: none; }
 
-/* كل النصوص */
-h1, h2, h3, h4, h5, h6,
-p, span, div, label,
-[data-testid="stMarkdownContainer"],
-[data-testid="stText"],
-.stMarkdown,
-.stText,
-section,
-small {
-    color: #ffffff !important;
-}
-
-/* اخفاء عناصر Streamlit */
-#MainMenu,
-footer,
-header {
-    visibility: hidden;
-}
-
-.stDeployButton {
-    display: none;
-}
-
-/* SIDEBAR */
+/* Sidebar */
 [data-testid="stSidebar"] {
     background: #161b27 !important;
     border-left: 1px solid rgba(255,255,255,0.08);
 }
+[data-testid="stSidebar"] * { color: #e8eaf0 !important; }
 
-[data-testid="stSidebar"] * {
-    color: #ffffff !important;
+/* Hide sidebar collapse/arrow buttons */
+[data-testid="collapsedControl"] { display: none !important; }
+[data-testid="stSidebarCollapseButton"] { display: none !important; }
+button[data-testid="baseButton-header"] { display: none !important; }
+.st-emotion-cache-1dp5vir { display: none !important; }
+
+/* Cards */
+.metric-card {
+    background: #1c2333;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    border-top: 2px solid #4f8ef7;
+}
+.metric-num { font-size: 32px; font-weight: 900; color: #4f8ef7; }
+.metric-label { font-size: 13px; color: #6b7280; margin-top: 4px; }
+
+.project-card {
+    background: #1c2333;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.project-card:hover { border-color: rgba(79,142,247,0.4); }
+
+.stage-badge {
+    display: inline-block;
+    padding: 3px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+}
+.stage-done { background: rgba(52,211,153,0.15); color: #34d399; }
+.stage-ongoing { background: rgba(251,191,36,0.15); color: #fbbf24; }
+.stage-early { background: rgba(79,142,247,0.15); color: #4f8ef7; }
+.stage-sketch { background: rgba(107,114,128,0.15); color: #9ca3af; }
+
+.chat-msg-ai {
+    background: #1c2333;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    border-top-right-radius: 3px;
+    padding: 14px 16px;
+    margin: 8px 0;
+    font-size: 14px;
+    line-height: 1.8;
+    color: #e8eaf0;
+    direction: rtl;
+    text-align: right;
+}
+.chat-msg-user {
+    background: rgba(79,142,247,0.1);
+    border: 1px solid rgba(79,142,247,0.2);
+    border-radius: 12px;
+    border-top-left-radius: 3px;
+    padding: 14px 16px;
+    margin: 8px 0;
+    font-size: 14px;
+    color: #e8eaf0;
+    direction: rtl;
+    text-align: right;
+    margin-right: 20%;
 }
 
-/* أزرار السايدبار */
-[data-testid="stSidebar"] .stButton > button {
-    background-color: #1c2333 !important;
-    color: #ffffff !important;
-    border: 1px solid rgba(255,255,255,0.08) !important;
-    border-radius: 8px !important;
-    font-weight: 600 !important;
+.result-card {
+    background: #161b27;
+    border: 1px solid rgba(79,142,247,0.3);
+    border-radius: 10px;
+    padding: 16px;
+    margin-top: 10px;
+    direction: rtl;
+    text-align: right;
 }
 
-[data-testid="stSidebar"] .stButton > button:hover {
-    background-color: #222b3d !important;
-    border-color: rgba(79,142,247,0.5) !important;
+.section-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #e8eaf0;
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    direction: rtl;
+    text-align: right;
 }
 
-/* الأزرار العامة */
+.file-card {
+    background: #161b27;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+}
+
+.timeline-wrap {
+    background: #1c2333;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 12px 0;
+}
+
+/* Buttons */
 .stButton > button {
     font-family: 'Cairo', sans-serif !important;
     border-radius: 8px !important;
     font-weight: 600 !important;
-    color: #ffffff !important;
 }
 
-/* حقول الإدخال */
+/* Hamburger button */
+button[data-testid="baseButton-secondary"][kind="secondary"]:has(div:contains("≡")),
+[data-testid="stSidebar"] button[key="toggle_sidebar"] {
+    background: transparent !important;
+    border: none !important;
+    color: #e8eaf0 !important;
+    font-size: 22px !important;
+    padding: 4px 8px !important;
+    min-height: unset !important;
+}
+
+/* Input fields */
 .stTextInput > div > div > input,
-.stTextArea > div > div > textarea,
-.stSelectbox > div > div {
+.stSelectbox > div > div,
+.stTextArea > div > div > textarea {
+    font-family: 'Cairo', sans-serif !important;
     background: #1c2333 !important;
-    border: 1px solid rgba(255,255,255,0.15) !important;
     color: #ffffff !important;
+    border-color: rgba(255,255,255,0.2) !important;
     direction: rtl !important;
 }
 
-/* النص داخل الحقول */
-input,
-textarea {
+/* Login page inputs - white text */
+input[type="email"], input[type="password"], input[type="text"] {
     color: #ffffff !important;
     caret-color: #ffffff !important;
 }
 
-/* Placeholder */
-input::placeholder,
-textarea::placeholder {
-    color: rgba(255,255,255,0.45) !important;
+::placeholder {
+    color: rgba(255,255,255,0.4) !important;
 }
 
-/* Selectbox */
-.stSelectbox div[data-baseweb="select"] * {
-    background: #1c2333 !important;
-    color: #ffffff !important;
-}
-
-/* الفورمز */
 div[data-testid="stForm"] {
     background: #1c2333;
     border: 1px solid rgba(255,255,255,0.08);
@@ -145,74 +205,47 @@ div[data-testid="stForm"] {
     padding: 20px;
 }
 
-/* التابات */
+/* Hide Press Enter text */
+.stTextInput > div > div > div > div[data-baseweb="input"] + div { display: none !important; }
+small, [data-testid="InputInstructions"] { display: none !important; }
+.st-emotion-cache-ue6h4q { display: none !important; }
+div[data-testid="stTextInput"] small { display: none !important; }
+div[data-testid="stSelectbox"] small { display: none !important; }
+[data-testid="InputInstructions"] { display: none !important; }
+p[id*="instruction"] { display: none !important; }
+
+/* Hide all helper text under inputs */
+.stTextInput div[data-baseweb="base-input"] ~ div { display: none !important; }
+footer[data-testid="InputInstructions"] { display: none !important; }
+
+/* Tabs */
 .stTabs [data-baseweb="tab-list"] {
     background: #161b27;
     border-radius: 10px;
     padding: 4px;
 }
-
 .stTabs [data-baseweb="tab"] {
-    color: #ffffff !important;
+    font-family: 'Cairo', sans-serif !important;
+    color: #6b7280 !important;
 }
-
 .stTabs [aria-selected="true"] {
     color: #4f8ef7 !important;
     background: #1c2333 !important;
     border-radius: 8px !important;
-}
-
-/* إخفاء النصوص المساعدة تحت الحقول */
-[data-testid="InputInstructions"] {
-    display: none !important;
-}
-
-small {
-    display: none !important;
-}
-
-p[id*="instruction"] {
-    display: none !important;
-}
-
-.stTextInput div[data-baseweb="base-input"] ~ div {
-    display: none !important;
-}
-
-.stTextArea div[data-baseweb="base-input"] ~ div {
-    display: none !important;
-}
-
-/* إخفاء زر فتح/إغلاق السايدبار */
-[data-testid="collapsedControl"] {
-    display: none !important;
-}
-
-[data-testid="stSidebarCollapseButton"] {
-    display: none !important;
 }
 </style>
 """, unsafe_allow_html=True)
 
 # ===== SESSION STATE =====
 if "logged_in" not in st.session_state:
-    st.session_state["logged_in"] = False
-
+    st.session_state.logged_in = False
 if "chat_history" not in st.session_state:
-    st.session_state["chat_history"] = []
-
+    st.session_state.chat_history = []
 if "page" not in st.session_state:
-    st.session_state["page"] = "dashboard"
-
+    st.session_state.page = "dashboard"
 if "sidebar_open" not in st.session_state:
-    st.session_state["sidebar_open"] = True
+    st.session_state.sidebar_open = True
 
-if "selected_project" not in st.session_state:
-    st.session_state["selected_project"] = PROJECTS[0]
-
-if "selected_client" not in st.session_state:
-    st.session_state["selected_client"] = ""
-    
 # ===========================
 # LOGIN PAGE
 # ===========================
@@ -325,57 +358,17 @@ def render_sidebar():
         min-width: 220px !important;
         max-width: 220px !important;
     }
-
-    [data-testid="stSidebar"] * {
-        color: #e8eaf0 !important;
-        font-family: 'Cairo', sans-serif !important;
-    }
-
-    [data-testid="collapsedControl"] {
-        display: none !important;
-    }
-
-    [data-testid="stSidebarCollapseButton"] {
-        display: none !important;
-    }
-
-    section[data-testid="stSidebar"] > div {
-        padding-top: 20px !important;
-    }
-
-    /* أزرار الشريط الجانبي */
-    [data-testid="stSidebar"] .stButton > button {
-        background-color: #1c2333 !important;
-        color: #e8eaf0 !important;
-        border: 1px solid rgba(255,255,255,0.08) !important;
-        border-radius: 8px !important;
-        font-weight: 600 !important;
-        box-shadow: none !important;
-    }
-
-    [data-testid="stSidebar"] .stButton > button:hover {
-        background-color: #222b3d !important;
-        color: #ffffff !important;
-        border-color: rgba(79,142,247,0.5) !important;
-    }
-
-    [data-testid="stSidebar"] .stButton > button:focus,
-    [data-testid="stSidebar"] .stButton > button:active {
-        background-color: #1c2333 !important;
-        color: #ffffff !important;
-        border-color: #4f8ef7 !important;
-        outline: none !important;
-        box-shadow: none !important;
-    }
+    [data-testid="stSidebar"] * { color: #e8eaf0 !important; }
+    [data-testid="collapsedControl"] { display: none !important; }
+    [data-testid="stSidebarCollapseButton"] { display: none !important; }
+    section[data-testid="stSidebar"] > div { padding-top: 20px !important; }
     </style>
     """, unsafe_allow_html=True)
 
     with st.sidebar:
         st.markdown("""
         <div style='padding:0 0 16px; border-bottom:1px solid rgba(255,255,255,0.08); margin-bottom:16px;'>
-            <div style='font-size:14px; font-weight:700; color:#e8eaf0; font-family:Cairo,sans-serif; text-align:right;'>
-                نظام الأرشفة الهندسية
-            </div>
+            <div style='font-size:14px; font-weight:700; color:#e8eaf0; font-family:Cairo,sans-serif;'>نظام الأرشفة الهندسية</div>
         </div>
         """, unsafe_allow_html=True)
 
@@ -394,7 +387,6 @@ def render_sidebar():
                 st.rerun()
 
         st.markdown("---")
-
         if st.button("تسجيل الخروج", key="logout", use_container_width=True):
             st.session_state.logged_in = False
             st.session_state.chat_history = []
@@ -823,23 +815,22 @@ def page_reports():
 # ===========================
 # MAIN ROUTER
 # ===========================
-if not st.session_state.get("logged_in", False):
+if not st.session_state.logged_in:
     login_page()
 else:
     render_sidebar()
-
-    page = st.session_state.get("page", "dashboard")
+    page = st.session_state.page
 
     page_map = {
-        "dashboard": page_dashboard,
-        "projects": page_projects,
-        "chat": page_chat,
-        "add": page_add,
-        "detail": page_detail,
-        "clients": page_clients,
-        "client_projects": page_client_projects,
-        "reports": page_reports,
+        "dashboard":       (page_dashboard,       "لوحة التحكم"),
+        "projects":        (page_projects,         "كل المشاريع"),
+        "chat":            (page_chat,             "المساعد الذكي"),
+        "add":             (page_add,              "مشروع جديد"),
+        "detail":          (page_detail,           "تفاصيل المشروع"),
+        "clients":         (page_clients,          "العملاء"),
+        "client_projects": (page_client_projects,  "مشاريع العميل"),
+        "reports":         (page_reports,          "التقارير"),
     }
 
-    func = page_map.get(page, page_dashboard)
+    func, title = page_map.get(page, (page_dashboard, " لوحة التحكم"))
     func()
