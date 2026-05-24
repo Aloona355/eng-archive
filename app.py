@@ -172,9 +172,19 @@ button[data-testid="baseButton-header"] { display: none !important; }
 .stTextArea > div > div > textarea {
     font-family: 'Cairo', sans-serif !important;
     background: #1c2333 !important;
-    color: #e8eaf0 !important;
-    border-color: rgba(255,255,255,0.08) !important;
+    color: #ffffff !important;
+    border-color: rgba(255,255,255,0.2) !important;
     direction: rtl !important;
+}
+
+/* Login page inputs - white text */
+input[type="email"], input[type="password"], input[type="text"] {
+    color: #ffffff !important;
+    caret-color: #ffffff !important;
+}
+
+::placeholder {
+    color: rgba(255,255,255,0.4) !important;
 }
 
 div[data-testid="stForm"] {
@@ -222,6 +232,8 @@ if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 if "page" not in st.session_state:
     st.session_state.page = "dashboard"
+if "sidebar_open" not in st.session_state:
+    st.session_state.sidebar_open = True
 
 # ===========================
 # LOGIN PAGE
@@ -239,8 +251,8 @@ def login_page():
         """, unsafe_allow_html=True)
 
         with st.form("login_form"):
-            email = st.text_input(" البريد الإلكتروني")
-            password = st.text_input(" كلمة المرور", type="password")
+            email = st.text_input(" البريد الإلكتروني", placeholder="engineer@company.com")
+            password = st.text_input(" كلمة المرور", type="password", placeholder="••••••••")
             submitted = st.form_submit_button("تسجيل الدخول", use_container_width=True, type="primary")
 
             if submitted:
@@ -256,35 +268,50 @@ def login_page():
 # SIDEBAR
 # ===========================
 def render_sidebar():
-    with st.sidebar:
-        st.markdown("""
-        <div style='text-align:center; padding:10px 0 20px;'>
-            <div style='font-size:32px;'></div>
-            <div style='font-size:14px; font-weight:700; color:#e8eaf0; margin-top:6px;'>نظام الأرشفة الهندسية</div>
-        </div>
-        """, unsafe_allow_html=True)
-
-        st.markdown("**القائمة الرئيسية**")
-
-        pages = {
-            " الرئيسية": "dashboard",
-            " كل المشاريع": "projects",
-            " شات AI": "chat",
-            " مشروع جديد": "add",
-            " العملاء": "clients",
-            " التقارير": "reports",
-        }
-
-        for label, key in pages.items():
-            if st.button(label, key=f"nav_{key}", use_container_width=True):
-                st.session_state.page = key
-                st.rerun()
-
-        st.markdown("---")
-        if st.button("تسجيل الخروج", key="logout", use_container_width=True):
-            st.session_state.logged_in = False
-            st.session_state.chat_history = []
+    # Toggle button always visible at top
+    col_toggle, col_title = st.columns([0.5, 5])
+    with col_toggle:
+        icon = "◀" if st.session_state.sidebar_open else "▶"
+        if st.button(icon, key="toggle_sidebar"):
+            st.session_state.sidebar_open = not st.session_state.sidebar_open
             st.rerun()
+
+    if st.session_state.sidebar_open:
+        with st.sidebar:
+            st.markdown("""
+            <div style='text-align:center; padding:10px 0 20px;'>
+                <div style='font-size:14px; font-weight:700; color:#e8eaf0; margin-top:6px;'>نظام الأرشفة الهندسية</div>
+            </div>
+            """, unsafe_allow_html=True)
+
+            st.markdown("**القائمة الرئيسية**")
+
+            pages = {
+                "الرئيسية": "dashboard",
+                "كل المشاريع": "projects",
+                "شات AI": "chat",
+                "مشروع جديد": "add",
+                "العملاء": "clients",
+                "التقارير": "reports",
+            }
+
+            for label, key in pages.items():
+                if st.button(label, key=f"nav_{key}", use_container_width=True):
+                    st.session_state.page = key
+                    st.rerun()
+
+            st.markdown("---")
+            if st.button("تسجيل الخروج", key="logout", use_container_width=True):
+                st.session_state.logged_in = False
+                st.session_state.chat_history = []
+                st.rerun()
+    else:
+        # Hide sidebar when closed
+        st.markdown("""
+        <style>
+        [data-testid="stSidebar"] { display: none !important; }
+        </style>
+        """, unsafe_allow_html=True)
 
 # ===========================
 # DASHBOARD
