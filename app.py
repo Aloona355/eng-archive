@@ -358,17 +358,57 @@ def render_sidebar():
         min-width: 220px !important;
         max-width: 220px !important;
     }
-    [data-testid="stSidebar"] * { color: #e8eaf0 !important; }
-    [data-testid="collapsedControl"] { display: none !important; }
-    [data-testid="stSidebarCollapseButton"] { display: none !important; }
-    section[data-testid="stSidebar"] > div { padding-top: 20px !important; }
+
+    [data-testid="stSidebar"] * {
+        color: #e8eaf0 !important;
+        font-family: 'Cairo', sans-serif !important;
+    }
+
+    [data-testid="collapsedControl"] {
+        display: none !important;
+    }
+
+    [data-testid="stSidebarCollapseButton"] {
+        display: none !important;
+    }
+
+    section[data-testid="stSidebar"] > div {
+        padding-top: 20px !important;
+    }
+
+    /* أزرار الشريط الجانبي */
+    [data-testid="stSidebar"] .stButton > button {
+        background-color: #1c2333 !important;
+        color: #e8eaf0 !important;
+        border: 1px solid rgba(255,255,255,0.08) !important;
+        border-radius: 8px !important;
+        font-weight: 600 !important;
+        box-shadow: none !important;
+    }
+
+    [data-testid="stSidebar"] .stButton > button:hover {
+        background-color: #222b3d !important;
+        color: #ffffff !important;
+        border-color: rgba(79,142,247,0.5) !important;
+    }
+
+    [data-testid="stSidebar"] .stButton > button:focus,
+    [data-testid="stSidebar"] .stButton > button:active {
+        background-color: #1c2333 !important;
+        color: #ffffff !important;
+        border-color: #4f8ef7 !important;
+        outline: none !important;
+        box-shadow: none !important;
+    }
     </style>
     """, unsafe_allow_html=True)
 
     with st.sidebar:
         st.markdown("""
         <div style='padding:0 0 16px; border-bottom:1px solid rgba(255,255,255,0.08); margin-bottom:16px;'>
-            <div style='font-size:14px; font-weight:700; color:#e8eaf0; font-family:Cairo,sans-serif;'>نظام الأرشفة الهندسية</div>
+            <div style='font-size:14px; font-weight:700; color:#e8eaf0; font-family:Cairo,sans-serif; text-align:right;'>
+                نظام الأرشفة الهندسية
+            </div>
         </div>
         """, unsafe_allow_html=True)
 
@@ -387,6 +427,7 @@ def render_sidebar():
                 st.rerun()
 
         st.markdown("---")
+
         if st.button("تسجيل الخروج", key="logout", use_container_width=True):
             st.session_state.logged_in = False
             st.session_state.chat_history = []
