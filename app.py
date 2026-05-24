@@ -166,6 +166,17 @@ button[data-testid="baseButton-header"] { display: none !important; }
     font-weight: 600 !important;
 }
 
+/* Hamburger button */
+button[data-testid="baseButton-secondary"][kind="secondary"]:has(div:contains("≡")),
+[data-testid="stSidebar"] button[key="toggle_sidebar"] {
+    background: transparent !important;
+    border: none !important;
+    color: #e8eaf0 !important;
+    font-size: 22px !important;
+    padding: 4px 8px !important;
+    min-height: unset !important;
+}
+
 /* Input fields */
 .stTextInput > div > div > input,
 .stSelectbox > div > div,
@@ -268,19 +279,46 @@ def login_page():
 # SIDEBAR
 # ===========================
 def render_sidebar():
-    # Toggle button always visible at top
-    col_toggle, col_title = st.columns([0.5, 5])
-    with col_toggle:
-        icon = "◀" if st.session_state.sidebar_open else "▶"
-        if st.button(icon, key="toggle_sidebar"):
+    # Hide default collapse button
+    st.markdown("""
+    <style>
+    [data-testid="collapsedControl"] { display: none !important; }
+    [data-testid="stSidebarCollapseButton"] { display: none !important; }
+    </style>
+    """, unsafe_allow_html=True)
+
+    with st.sidebar:
+        # Hamburger toggle button
+        st.markdown("""
+        <style>
+        .hamburger-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin-bottom: 16px;
+        }
+        .hamburger-btn span {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background: #e8eaf0;
+            border-radius: 2px;
+        }
+        </style>
+        """, unsafe_allow_html=True)
+
+        if st.button("≡", key="toggle_sidebar", help="فتح/إغلاق القائمة"):
             st.session_state.sidebar_open = not st.session_state.sidebar_open
             st.rerun()
 
-    if st.session_state.sidebar_open:
-        with st.sidebar:
+        if st.session_state.sidebar_open:
             st.markdown("""
-            <div style='text-align:center; padding:10px 0 20px;'>
-                <div style='font-size:14px; font-weight:700; color:#e8eaf0; margin-top:6px;'>نظام الأرشفة الهندسية</div>
+            <div style='padding:4px 0 16px;'>
+                <div style='font-size:14px; font-weight:700; color:#e8eaf0;'>نظام الأرشفة الهندسية</div>
             </div>
             """, unsafe_allow_html=True)
 
@@ -305,13 +343,8 @@ def render_sidebar():
                 st.session_state.logged_in = False
                 st.session_state.chat_history = []
                 st.rerun()
-    else:
-        # Hide sidebar when closed
-        st.markdown("""
-        <style>
-        [data-testid="stSidebar"] { display: none !important; }
-        </style>
-        """, unsafe_allow_html=True)
+        else:
+            st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
 
 # ===========================
 # DASHBOARD
